@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MainActivity"
+    tools:context=".LoginActivity"
     tools:showIn="@layout/activity_main">
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/txtEmailUsuario"
         android:layout_width="322dp"
         android:layout_height="46dp"
         android:layout_marginStart="8dp"
@@ -25,7 +25,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/txtSenha"
         android:layout_width="321dp"
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
@@ -40,7 +40,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toBottomOf="@+id/txtEmailUsuario" />
 
     <Button
         android:id="@+id/btnLogin"
@@ -58,7 +58,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintTop_toBottomOf="@+id/txtSenha" />
 
     <TextView
         android:id="@+id/textView"
@@ -75,7 +75,7 @@
         app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
 
     <ImageButton
-        android:id="@+id/imageButton4"
+        android:id="@+id/imgBtnFacebook"
         android:layout_width="329dp"
         android:layout_height="39dp"
         android:layout_marginStart="8dp"
@@ -90,7 +90,7 @@
         app:srcCompat="@drawable/loginfacebook" />
 
     <ImageButton
-        android:id="@+id/imageButton5"
+        android:id="@+id/imgBtnTwitter"
         android:layout_width="327dp"
         android:layout_height="34dp"
         android:layout_marginStart="8dp"
@@ -100,11 +100,11 @@
         android:layout_marginRight="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton4"
+        app:layout_constraintTop_toBottomOf="@+id/imgBtnFacebook"
         app:srcCompat="@drawable/logintwitter" />
 
     <ImageButton
-        android:id="@+id/imageButton6"
+        android:id="@+id/imgBtnGoogle"
         android:layout_width="328dp"
         android:layout_height="35dp"
         android:layout_marginStart="8dp"
@@ -114,7 +114,7 @@
         android:layout_marginRight="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton5"
+        app:layout_constraintTop_toBottomOf="@+id/imgBtnTwitter"
         app:srcCompat="@drawable/logingoogle" />
 
 </android.support.constraint.ConstraintLayout>

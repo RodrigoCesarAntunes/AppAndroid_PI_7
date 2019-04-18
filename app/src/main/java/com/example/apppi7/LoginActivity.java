@@ -1,5 +1,6 @@
 package com.example.apppi7;
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,8 +11,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.graphics.Color;
+import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
+
+    Button btnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +25,16 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         setTitle("Login");
+
+        btnLogin = (Button)findViewById(R.id.btnLogin);
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, CriarContaActivity.class);
+                startActivity(intent);
+            }
+        });
 
         //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00a6ff")));
     }
