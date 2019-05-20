@@ -1,10 +1,14 @@
 package com.example.apppi7;
 
+import android.app.Application;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -22,9 +26,12 @@ import android.widget.TextView;
 
 import com.example.apppi7.api.IApiProduto;
 import com.example.apppi7.model.Produto;
+import com.example.apppi7.views_code.AdapterProduto;
+import com.example.apppi7.views_code.CardProduto;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -36,15 +43,25 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    LinearLayout container;
+    RecyclerView container;
+    RecyclerView.Adapter adapter;
+    RecyclerView.LayoutManager layoutManager;
+    private static Context instance;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        instance = this.getBaseContext();
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        container = (LinearLayout) findViewById(R.id.linearContainer);
+        container = (RecyclerView) findViewById(R.id.linearContainer);
+        container.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        container.setLayoutManager(layoutManager);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -59,6 +76,8 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void CarregarLista() {
+
+
         Retrofit instanciaRetrofit = new Retrofit.Builder()
                 .baseUrl("https://oficinacordova.azurewebsites.net")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -74,12 +93,16 @@ public class HomeActivity extends AppCompatActivity
             public void onResponse(Call<List<Produto>> call, Response<List<Produto>> response) {
 
                 List<Produto> produtos = response.body();
+                ArrayList<CardProduto> cardProdutos = new ArrayList<CardProduto>();
 
                 if (response.isSuccessful() && produtos != null) {
                     String imgUrl = "https://oficinacordova.azurewebsites.net/android/rest/produto/image/";
                     for (Produto produto : produtos) {
-                        CriarCard(produto, imgUrl);
+                        //CriarCard(produto, imgUrl);
+                        cardProdutos.add(new CardProduto(imgUrl + produto.getIdProduto(), Float.toString(produto.getPrecProduto()), produto.getNomeProduto(), produto));
                     }
+                    adapter = new AdapterProduto(cardProdutos);
+                    container.setAdapter(adapter);
                 }
             }
 
@@ -92,16 +115,10 @@ public class HomeActivity extends AppCompatActivity
             }
         };
 
-
-        Uri uriImg = Uri.parse("https://cdnv2.moovin.com.br/petcenterexpress/imagens/produtos/original/racao-golden-formula-frango-e-arroz-filhotes-3kg-eb5fd2056a518a2b51151fec0fd65f7b.png");
         chamada.enqueue(Callback);
 
-        //PopularProdutos();
-        //PopularProdutos();
-        //PopularProdutos();
-        //PopularProdutos();
-        //PopularProdutos();
-        //PopularProdutos();
+
+
     }
 
     private void PopularProdutos()
@@ -131,10 +148,15 @@ public class HomeActivity extends AppCompatActivity
         txtPreco.setText(Float.toString(produto.getPrecProduto()));
         txtTitulo.setText(produto.getNomeProduto());
 
-        
+
 
         container.addView(card);
 
+    }
+
+    public static Context getContext()
+    {
+        return instance;
     }
 
     @Override
