@@ -1,5 +1,6 @@
 package com.example.apppi7;
 
+import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
@@ -44,7 +45,7 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     RecyclerView container;
-    RecyclerView.Adapter adapter;
+    AdapterProduto adapter;
     RecyclerView.LayoutManager layoutManager;
     private static Context instance;
 
@@ -102,6 +103,12 @@ public class HomeActivity extends AppCompatActivity
                         cardProdutos.add(new CardProduto(imgUrl + produto.getIdProduto(), Float.toString(produto.getPrecProduto()), produto.getNomeProduto(), produto));
                     }
                     adapter = new AdapterProduto(cardProdutos);
+                    adapter.setOnItemClickListener(new AdapterProduto.IOnItemClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                            showDialog("Clickado", Integer.toString(position));
+                        }
+                    });
                     container.setAdapter(adapter);
                 }
             }
@@ -214,5 +221,24 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showDialog(String message, String title) {
+        //Declara e instancia uma fábrica de construção de diálogos
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //Configura o corpo da mensagem
+        builder.setMessage(message);
+        //Configura o título da mensagem
+        builder.setTitle(title);
+        //Impede que o botão seja cancelável (possa clicar
+        //em voltar ou fora para fechar)
+        builder.setCancelable(false);
+        //Configura um botão de OK para fechamento (um
+        //outro listener pode ser configurado no lugar do "null")
+        builder.setPositiveButton("OK", null);
+        //Cria efetivamente o diálogo
+        AlertDialog dialog = builder.create();
+        //Faz com que o diálogo apareça na tela
+        dialog.show();
     }
 }

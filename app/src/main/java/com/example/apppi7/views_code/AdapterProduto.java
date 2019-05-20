@@ -17,6 +17,17 @@ import java.util.ArrayList;
 
 public class AdapterProduto extends RecyclerView.Adapter<AdapterProduto.ProdutoViewHolder> {
 
+    private IOnItemClickListener _listener;
+
+    public interface IOnItemClickListener{
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(IOnItemClickListener listener)
+    {
+        _listener = listener;
+    }
+
     public static class ProdutoViewHolder extends RecyclerView.ViewHolder
     {
 
@@ -24,12 +35,26 @@ public class AdapterProduto extends RecyclerView.Adapter<AdapterProduto.ProdutoV
         public TextView txtPreco;
         public TextView txtNome;
 
-        public ProdutoViewHolder(View itemView) {
+        public ProdutoViewHolder(View itemView, final IOnItemClickListener innerListener) {
             super(itemView);
 
             imgCard = itemView.findViewById(R.id.imgProdutoCard);
             txtNome = itemView.findViewById(R.id.txtNomeProdutoCard);
             txtPreco = itemView.findViewById(R.id.txtPrecoProdutoCard);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(innerListener != null)
+                    {
+                        int posistion = getAdapterPosition();
+                        if(posistion != RecyclerView.NO_POSITION)
+                        {
+                            innerListener.onItemClick(posistion);
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -44,7 +69,7 @@ public class AdapterProduto extends RecyclerView.Adapter<AdapterProduto.ProdutoV
     public ProdutoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_produto, parent, false);
-        ProdutoViewHolder produtoVH = new ProdutoViewHolder(v);
+        ProdutoViewHolder produtoVH = new ProdutoViewHolder(v, _listener);
         return produtoVH;
     }
 
