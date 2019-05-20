@@ -1,8 +1,11 @@
 package com.example.apppi7;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.CardView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,16 +15,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.apppi7.api.IApiProduto;
+import com.example.apppi7.model.Produto;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private List<TextView> lblNomes;
-    private ListView lvProdutos;
+    LinearLayout container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +44,7 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        lvProdutos = (ListView)findViewById(R.id.lvProdutos);
+        container = (LinearLayout) findViewById(R.id.linearContainer);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -40,11 +54,87 @@ public class HomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        CarregarLista();
     }
 
-    private void CarregarLista()
+    private void CarregarLista() {
+        Retrofit instanciaRetrofit = new Retrofit.Builder()
+                .baseUrl("https://oficinacordova.azurewebsites.net")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        IApiProduto api =
+                instanciaRetrofit.create(IApiProduto.class);
+
+        Call<List<Produto>> chamada = api.GetProduto();
+
+        Callback<List<Produto>> Callback = new Callback<List<Produto>>() {
+            @Override
+            public void onResponse(Call<List<Produto>> call, Response<List<Produto>> response) {
+
+                List<Produto> produtos = response.body();
+
+                if (response.isSuccessful() && produtos != null) {
+                    String imgUrl = "https://oficinacordova.azurewebsites.net/android/rest/produto/image/";
+                    for (Produto produto : produtos) {
+                        CriarCard(produto, imgUrl);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Produto>> call, Throwable t) {
+
+                String teste = t.getMessage();
+
+
+            }
+        };
+
+
+        Uri uriImg = Uri.parse("https://cdnv2.moovin.com.br/petcenterexpress/imagens/produtos/original/racao-golden-formula-frango-e-arroz-filhotes-3kg-eb5fd2056a518a2b51151fec0fd65f7b.png");
+        chamada.enqueue(Callback);
+
+        //PopularProdutos();
+        //PopularProdutos();
+        //PopularProdutos();
+        //PopularProdutos();
+        //PopularProdutos();
+        //PopularProdutos();
+    }
+
+    private void PopularProdutos()
     {
+        Produto produto = new Produto();
+        produto.setNomeProduto("Ração");
+        produto.setPrecProduto(4.14f);
+        produto.setIdProduto(1);
+        String img = "https://cdnv2.moovin.com.br/petcenterexpress/imagens/produtos/original/racao-golden-formula-frango-e-arroz-filhotes-3kg-eb5fd2056a518a2b51151fec0fd65f7b.png";
+        CriarCard(produto, img);
+
+    }
+
+
+    private void CriarCard(Produto produto, String urlImg)
+    {
+        CardView card = (CardView) LayoutInflater.from(this).inflate(R.layout.card, container, false);
+        ImageView imagem = (ImageView) card.findViewById(R.id.imgCard);
+        TextView txtPreco = card.findViewById(R.id.txtPreco);
+        TextView txtTitulo = card.findViewById(R.id.txtProduto);
+        String url = "https://oficinacordova.azurewebsites.net/android/rest/produto/image/" + produto.getIdProduto();
+
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(this));
+        imageLoader.displayImage(urlImg + produto.getIdProduto(), imagem);
+
+        txtPreco.setText(Float.toString(produto.getPrecProduto()));
+        txtTitulo.setText(produto.getNomeProduto());
+
         
+
+        container.addView(card);
+
     }
 
     @Override
