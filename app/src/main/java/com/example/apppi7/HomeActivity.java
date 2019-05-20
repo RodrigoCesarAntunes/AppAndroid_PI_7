@@ -105,8 +105,8 @@ public class HomeActivity extends AppCompatActivity
                     adapter = new AdapterProduto(cardProdutos);
                     adapter.setOnItemClickListener(new AdapterProduto.IOnItemClickListener() {
                         @Override
-                        public void onItemClick(int position) {
-                            showDialog("Clickado", Integer.toString(position));
+                        public void onItemClick(CardProduto cardProduto) {
+                            showDialog("Clickado", cardProduto.getTxtNomeCard());
                         }
                     });
                     container.setAdapter(adapter);

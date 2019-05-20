@@ -20,7 +20,7 @@ public class AdapterProduto extends RecyclerView.Adapter<AdapterProduto.ProdutoV
     private IOnItemClickListener _listener;
 
     public interface IOnItemClickListener{
-        void onItemClick(int position);
+        void onItemClick(CardProduto cardProduto);
     }
 
     public void setOnItemClickListener(IOnItemClickListener listener)
@@ -28,12 +28,15 @@ public class AdapterProduto extends RecyclerView.Adapter<AdapterProduto.ProdutoV
         _listener = listener;
     }
 
+    private static ArrayList<CardProduto> _cardProdutos;
+
     public static class ProdutoViewHolder extends RecyclerView.ViewHolder
     {
 
         public ImageView imgCard;
         public TextView txtPreco;
         public TextView txtNome;
+
 
         public ProdutoViewHolder(View itemView, final IOnItemClickListener innerListener) {
             super(itemView);
@@ -47,10 +50,10 @@ public class AdapterProduto extends RecyclerView.Adapter<AdapterProduto.ProdutoV
                 public void onClick(View view) {
                     if(innerListener != null)
                     {
-                        int posistion = getAdapterPosition();
-                        if(posistion != RecyclerView.NO_POSITION)
+                        int position = getAdapterPosition();
+                        if(position != RecyclerView.NO_POSITION)
                         {
-                            innerListener.onItemClick(posistion);
+                            innerListener.onItemClick(_cardProdutos.get(position));
                         }
                     }
                 }
@@ -58,7 +61,6 @@ public class AdapterProduto extends RecyclerView.Adapter<AdapterProduto.ProdutoV
         }
     }
 
-    private ArrayList<CardProduto> _cardProdutos;
 
     public AdapterProduto(ArrayList<CardProduto> cardProdutos)
     {
